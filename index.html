@@ -32,21 +32,27 @@
             <section ng-controller="MoviesController">
                 <h1>Movies from 2014</h1>
 
-                <p>{{movies.length}} {{1 == movies.length ? 'movie' : 'movies'}}</p>
+                <p><input type="search" class="form-control" placeholder="search for a title" ng-model="searchString"/></p>
+
+                <p>{{filteredMovies.length}} {{1 == filteredMovies.length ? 'movie' : 'movies'}}</p>
 
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Sales</th>
-                            <th>Tickets</th>
+                            <th ng-click="sortBy('title')" ng-class="{sorted: isSortedBy('title')}">Title</th>
+                            <th ng-click="sortBy('grossSales')" ng-class="{sorted: isSortedBy('grossSales')}">Sales</th>
+                            <th ng-click="sortBy('ticketsSold')" ng-class="{sorted: isSortedBy('ticketsSold')}">Tickets</th>
+                            <th ng-click="sortBy('releaseDate')" ng-class="{sorted: isSortedBy('releaseDate')}">Release Date</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="movie in movies">
+                        <tr ng-repeat="movie in filteredMovies = (movies
+                        | filter : {title: searchString}
+                        | orderBy : sortCol : sortReverse)">
                             <td>{{movie.title}}</td>
                             <td>{{movie.grossSales | currency : '$' : 0}}</td>
                             <td>{{movie.ticketsSold | number}}</td>
+                            <td>{{movie.releaseDate | date}}</td>
                         </tr>
 
                     </tbody>
